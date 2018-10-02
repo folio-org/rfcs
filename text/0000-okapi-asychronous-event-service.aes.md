@@ -48,7 +48,7 @@ Okapi AES is implemented as a distinct internal module within Folio. It sits alo
 
 The Okapi AES Rule is entirely a backend feature that exists within Okapi. Other systems integrate with AES for the purposes of providing user interfaces or command-line interfaces are not in scope of this RFC.
 
-![OKapi AES Workflow](AES.image1.png "OKapi AES Workflow")
+![OKapi AES Workflow](AES.Image1.png "OKapi AES Workflow")
 
 ### AES Message Stream Descriptors
 
@@ -150,7 +150,7 @@ Additionally, Okapi AES is dependent on:
 
 The implementation of AES consists of three main components.  
 
-![OKapi AES Components](AES.image2.png "Okapi AES Compontents")
+![OKapi AES Components](AES.Image2.png "Okapi AES Compontents")
 
 #### Registration Service
 
