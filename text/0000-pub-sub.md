@@ -39,8 +39,7 @@ The approach described here is to provide a messaging system whereby modules pub
 - Integration with external/third party systems should be allowed (not in scope of MVP, but the basis for that must be provided)
 
 #### Non Functional Requirements
-- Direct access from backend modules to the underlying messaging engine (Kafka)  [VBar: I need to understand the rational here. It would seem to go against the microservice nature of mod-pubsub. In any case, it should be restricted to Kafka, since that's what is specifically in scope here.]
-[TS: You are right. RabbitMQ will just add ambiguity so I removed that. This requirement originates from the document "PubSub support in FOLIO and Okapi implementation".]
+- Direct access from backend modules to the underlying messaging engine (Kafka)
 
 ### Target Solution Architecture
 
@@ -54,57 +53,65 @@ The approach described here is to provide a messaging system whereby modules pub
 - The `mod-pubsub` module is implemented using a message queue (Kafka) which will provide the necessary persistence.
 
 #### High-level solution structure
-[VBar: I find this section to be confusing. I think you intend this to describe the "Interfaces" in the Java sense. If so we need to be clearer here. However since we are describe a module here, we will also need to describe the RESTful interfaces and provide the proposed paths: e.g. /pubsub/publish, pubsub/register/eventtype, pubsub/history, etc..]
-[TS: These are interfaces in terms of FOLIO platform. Since each module in FOLIO must implement some interface and this interface must be described in the module's descriptor file and is required by OKAPI at the very beginning of the module's registration. And module's dependencies are also defined on such interfaces.]
-
-There is a global FOLIO interface defined in the scope of this solution which provides APIs to ensure the functioning of the subsystem:
+There is a global FOLIO interface `pubsub` defined in the scope of this solution which provides APIs to ensure the functioning of the subsystem:
 - API for event type registration by publishers and subscribers. This API must be called by back-end modules.
-  - `POST /pubsub/eventtypes` 
-  - `POST /pubsub/eventtypes/{EVENT_TYPE}/subscribers`
+  - `POST /pubsub/eventtypes` - to register an event type 
+  - `DELETE /pubsub/eventtypes` - to remove event type registration
+  - `POST /pubsub/eventtypes/declare/publisher` - to declare a publisher for a set of event types
+  - `DELETE /pubsub/eventtypes/declare/publisher` - to remove publisher declaration
+  - `POST /pubsub/eventtypes/declare/subscriber` - to declare a subscriber for a set of event types
+  - `DELETE /pubsub/eventtypes/declare/subscriber` - to remove subscriber declaration
+- API to retrieve existing registered event types.
+  - `GET /pubsub/eventtypes` - returns all registered event types
+- API to retrieve the registered subscriptions for a specified tenant and event type
+  - `GET /pubsub/eventtypes/{EVENT_TYPE}/subscribers` - returns all subscribers of the event type provided in the path variable
+  - `GET /pubsub/eventtypes/{EVENT_TYPE}/publishers` - returns all publishers of the event type provided in the path variable
 - API used by publishers to send events. This API must be called by back-end modules which act as publishers
   - `POST /pubsub/publish`
-- API to retrieve existing registered event types.
-  - `GET /pubsub/eventtypes`
-- API to retrieve the registered subscriptions for a specified tenant and event type(s)
-  - `GET /pubsub/eventtypes/{EVENT_TYPE}/subscribers`
 - API to retrieve the activity history performed by the event manager. A correlationID can optionally be provided to limit context.
   - `GET /pubsub/history`
+  - `GET /pubsub/history?corellationId={corellationId}`
 
-Since OKAPI provides a feature like “Multiple” interfaces `pubsub-subscribe` interface can be defined to consume events. The endpoint of this interface must be called by an implementation of the `pubsub` to deliver events.
+It is allowed for publishers to provide callback URLs to receive feedback from `mod-pubsub` module in cases when:
+- Subscriber did not receive an event within the specified period of time.
+- All subscribers deleted their subscriptions on a particular event type registered by this publisher.
  
-This `pubsub-subscribe` interface defines a set of requirements that must be followed in case a module needs to provide its own “Subscriber endpoints” and implementation. The basic set of requirements:
+
+There is a set of requirements that must be followed by a module to provide “Subscriber endpoints” to consume events. The basic set of requirements:
 - HTTP Method - POST
 - A set of required HTTP header. [_To be defined further if it is needed._]
 - A payload structure - JSON which represents an event. See [Event data structure](#Event data structure) 
 
-Also default implementations should be provided that allow a back-end module to become a publisher or a subscriber respectively to simplify development.
+Reference implementations should be provided that allow a back-end module to become a publisher or a subscriber respectively to simplify development.
   
-A dedicated module, `mod-pubsub`, must implement and encapsulate all logic related to event sending and delivery. All interactions between this module and back-end business modules will be done via HTTP. The HTTP method for event sending and delivery is limited to POST.
+A dedicated module, `mod-pubsub`, must implement and encapsulate all logic related to event sending and delivery. All interactions between this module and back-end business modules will be done via HTTP.
 
 #### Registration
 
-Each module which acts as a publisher or a subscriber must contain a configuration or property with a set of event types it deals with. Publishers should provide event descriptors. For subscribers, it is enough to specify event types together with endpoints for event delivery. Details of that configuration must be defined.
+Each module which acts as a publisher or a subscriber must contain a configuration or property with a set of event types it deals with. Publishers should provide event descriptors. For subscribers, it is enough to specify event types together with endpoints for event delivery. Details of that configuration must be defined further.
 
-##### Event Type registration [VBar: is this actually "Event Type registration"]
+##### Event Type registration 
 The set of event descriptors will be registered by a publisher at the time when the module is enabled for a tenant. To do that the publisher must call `pubsub` API for event type registration. The payload for that call is a set of event descriptors which define events this particular module is able to publish.
 
 At this stage it is possible to check if another module has already been registered as a publisher for the same event descriptors.
 
-It is worth mentioning that at this stage only event descriptors will be registered. To allow a module to publish events further steps optionally should be taken. See [Activation / deactivation](#Activation-/-deactivation)
+It is worth mentioning that at this stage only event descriptors will be registered. To allow a module to publish events further steps optionally should be taken.
+
+![Event type registration diagram](http://www.plantuml.com/plantuml/png/TP4nJyCm48Lt_ufJ9nWgTKPL9nZO4B01myM-D2SSsxBF5VttN1nQXL8YPOZFxxltNeJ54pmSA0Z8CL61J7ikab4u1cEmIWnrx2Z3QjljtZQRpSVAc8HPs792bQt6wDRRL3lFPQ2yMm4MICROw3tP2LFcEtgbrAwDoP4nwnsaEq3GMLKJhCS1Eq_kFVGnwq3qEuWn-nnhMfZyxH7qIJ33dWcT2Wi9n1weAHmLcpb9p4N1EOvwmSRGyxvU4jJMn9ZW6dXU-DfQkVaFUTlKAZphdp0NkhORWmCxaFs45izdDNlyoKAPt79Xew8Nu1uSzxtETVG7saWo41GSJpjRG_Ibq0PPsDE27iC1FPzMtPz9SmglnaDixNYsCk5hS9UObl95HLTImXJIS_W4YStO_7ElE5csE-21e2CAYpPcHxfzUhy1)
 
 ##### Subscriber registration
-A back-end module can register event types it can consume at the time when the module is enabled for a tenant. To do that it must call the `pubsub` API for registration. The payload for that call is a set of event types augmented with endpoints provided by this module. These endpoints will be used to deliver events of respective types. In most cases, a default implementation of the “multiple” interface must be sufficient. But it is allowed for the module to provide its own endpoints in case the default implementation can’t be reused. To allow a module to receive events of registered types further steps optionally should be taken. See [Activation / deactivation](#Activation-/-deactivation)
+A back-end module can register event types it can consume at the time when the module is enabled for a tenant. To do that it must call the `pubsub` API for registration. The payload for that call is a set of event types augmented with endpoints provided by this module. These endpoints will be used to deliver events of respective types.
 
-##### Activation / deactivation [VBar: let's talk about this some more, seems like this is actually Publisher registration]
-When a module is up and running and is enabled for a tenant, a tenant administrator can define types of events which must (or must not) be published and received in scope of this tenant (subscribe a tenant to event types) using either UI Admin console/Settings Page or HTTP requests to `pubsub` endpoint for bulk operations. 
+##### Publisher registration
+When a module is up and running and is enabled for a tenant, a tenant administrator can define types of events which must (or must not) be published by this module in scope of this tenant (subscribe a tenant to event types) using either UI Admin console/Settings Page or HTTP requests to `pubsub` endpoint for bulk operations. 
 
 It is suggested that by default all event types are activated for a tenant.
 
-##### Cancellation
-When a module is disabled for a tenant whether it is a publisher or a subscriber the module must unregister event types it deals with by calling the API provided by Event Manager.
+##### Cancellation of registration
+When a module is disabled for a tenant whether it is a publisher or a subscriber the module must unregister event types it deals with by calling the API provided by `pubsub`.
 
-##### Event Manager responsibilities
-The Event Manager must keep track of registered event types, publishers and subscribers which are able to send and receive events of those types.
+##### mod-pubsub responsibilities
+The `mod-pubsub` must keep track of registered event types, publishers and subscribers which are able to send and receive events of those types.
 
 
 #### Data structures
@@ -127,23 +134,19 @@ Event payload | Arbitrary JSON (String representation)
 #### Event publishing
 There is a high-level sequence diagram below which represent the event publishing flow.
 
-![Event publishing Image](http://www.plantuml.com/plantuml/png/ZPHTRzem58Rl_IkEu88jWehs4dL8MqkdITrMhT5kA1ScEG6lnixy0KBYn_Su2Kdu61rI59kyvpd7xx7jX9C8apKg1xcVIs6NGYqWDpf1Qsd86FTEAx-Qeu7ExNmy7Gw7imvZEJTE92Bd5DbPwNHmMyMZ6NU0MyWPIxIKc3YXbIqr91bOFo--OugCzKunzDqcHb2-mNL9ijVlw6ugtGqZ8gU4Q-uGSkZUS_FwpELAAoeO1cF8H_1aa608N06Mw-PRgNbQ2-xqAjUs9T3pFxGAnXP6-_oYMK0_maoxPDBmuM56G5hc2A9eElaz-H7FecX4uoWg8F4snpvyHyTJxdWVdif2eeXa1OfYOO-uMsBo2Y83jnGMQg-19WONmZeqcBuehb9IO5Mvemn1iVSaXKmRuE2GXAx8mQM3c08EY4gx5hNGrVLKBhuZHqaEnYU516LTp3dkvD_oqzf3aaF8WLb5wfw5E7xSmwXNQv7kZR98U4Wnupwu46GPjNrxTHRwv5tBMg6S3jCNvLMAHcwhhH3mfXUQOhKt2S87ftEHzE6lHq_jHfTSVRnGT5XauoM4CXi7cZrlQqJLmB2ZwL7whAZEDUt-D5mjS5RQtNHeIGTeZgZ859fjX5l2XXj5gx8jEq9Ndnj-aJBJvC2vJ5yDyIudQg4hHdY7X_LIR8uoOn8NUydk4pmAXU4TZX3iod_X5pdqsHYzeV4tHVufBY7XKjfQSgzTyF6Bz5XBgwrSbHVqn_8sU4Blq26Rqws6G9kWEJb7OQNJJUJnnP5ebGcpuk62F7Jyc5Gu-P-WWyakU0cLTsy0)
+![Event publishing diagram](http://www.plantuml.com/plantuml/png/fLHTRzem57tFhxYY3zqYYdX67LBNqMbIsw4jsWlbmOblWZTZP_u0HUgFttKI4g0C8HKfiXFEFJu-zzXEE8amsw1oKFfK2hiIge3Iw0ojfMaKCU-qykiK3Gnkq-bYF1ul1r5KCkD49af6bOErvZUtRJsQwG2OXJAACYqbPavePHiCGQnFwx-HOqGiS3E5SW9pWqI8m1HW8uPLKZFU0UxrkjHs3w3JtqGTHONHlZox0w0VqIokIFduuM59XBJu1E9uCVirUqwMSJoXUHpN94bLuX2Uq37E71l2l14InmIhgQWMTXJtAyp-WCZ1hOI5pW2W5uE5i0uDyXV552S4jieThH0GZ9pPC8SSScs0WKC2kdeD9XqaL730gBJROwrndPxMnKlXYwjdjgcMxIxkE6-bILq0ZQPgTYh9yEIDxa3SQJybO_P_-DkjlazJHdb84ImUinqqgCPUMqYInvqYoiT6y5rpB996u9Wp7vmFi9oYLerEaiwzsskdK4w7rnVb5KSZgpP-WTvSXo1OxKs6yC7fKcH3-ElHKyJGPQEFPqG7f_h-GP3PsqYdo6P6qA6q7KKRcd2Aw57w96ZFxk-6gGANJSzwIrTqE5D4LPiAM-5Mi6L6qQxiw1JD9LthElUpbrIhp3MPTehrgo49vxMzJqsxR1Z34qaiTjzUFy6ZK1Z6S1l0Q_CLVf3nTyReBSs_AMgBOf8IAANj867v3lF4A1lqX41GvWqJ4dGEpINOD5CuWNtr5-r2SpzBZnr9UwQxl4jv3D-NDQCnnCQMTESYK3BxA-Ieh6b_NtbyWsPQvSAiMRY-3sDmp5JtwaAYWvVNO3sqply3)
 
 #### Event delivery
 There is a high-level sequence diagram below which represent the event delivery flow.
 
-![Event delivery Image](http://www.plantuml.com/plantuml/png/jLPDJnin4BtxLup2WJOY4LmHHOgWQYiX3YKtmi5PJrWBPxorlQ4hzSTtl5_PP4a8bEQoc_NupRmtuna77Gp2rnLI08L6hz0La3cReFUQ7eMGUR2KB-VeO70nlxm_FJrz60Xnd4aNTA8poHi7Iwj65ra-Dzgdw2u783raGYJM64o2jkGh6pOP-NnUhgD28VeelEmJfzdVQ581-REzPkFnkBPJ--5kQpDwoMq_U44s85WMf0mLO3YS60DhG0yE4sJ50ADyZAoNkGcIqERU5CEXG58GKOHuT3RFQfaxwWB_61n6b_5n3ZynECre8Aa2XOMpImWfGauAdIburumOOQNvxt4CmTlS9GYVWirqSWA_Sipn130auyypcXXl8R6vKJ17M6Y7_59i0KA3ruld3cF-G6xodj5pgfCKfED0ERqh6HXsOHr824WigYYHf0amPKcnj2JRnIWDjjrTfPWyLSIPsdHwqrf5g4ezxQEaWB-pIAOrw2lfanHLRkhijCNDmUl0iSSFibY7OJokFRo4NgLmuWjADhwtdjbrTWwtDkX5mVXjHK4USrscr3aMAM4vvvA9rhAhyIOBsitgclF1HHdJLx8IsvjA6clDkyMw8rERzAeQZn5w27PpF-Dbw7ZpaZ5wjTuDcOzaZu8TtHzzSuZqm6JyMSab9cHD9ZgK7PSR44tql1MEhgLxkfDcQMd3XfUwJah5fYrwoiTwpalDgJqykn6tYlcx96Kw-dEhu0sfirJAi3UF2ZiStYYNUhzSQhTSwZ_9fQ2E-QFaKdlbUbq-Uhzyj5i-WXfxcsRFx0qgSvjGpOJ0tOgGsALRLur-RtrECSIM90COb3w0fMwNc54Cg8sbpwXkwGVLo66DgsvO7SJOtWz3tJql3fuP_pet3fiThnsPZvuXBnN6mIdPtXpVHVDI_Z7us1Zy-G8tcck8dzCYusVrbNLKCE5Gd_dz1mLq99kvqfXSsn2dKTVogg5L7iur-pYAucMgvR-54OzN2x9rcOq7QbtXV1aYlWOjPRoLCan4hUc8lm00)
+![Event delivery diagram](http://www.plantuml.com/plantuml/png/nLPDJnj13Btlhx32WJQ22AweHOgWQYjH3f0RuJ3PSR8Z9fxjp6peIldnzUntabL80r8Fa6JNVlPxzjZZbTS8trP87YHgjKARGsfDZCufMaIHoBoXR3b32uCli-kdYukBvq4KdQR2UXMhLB3ZO6da-PSqcsdb4hJN0n0EqYYAZTOOUsN8bJPiuh9PyHebHj4k2BzsiLKSxdnSuhZBlMQZqQYoa_lXxYipwWkxctj4nYCOrgD85M0u76iDBQ03Yp6oO811FKPMoqnxGMWof_FXC4AI452YzNeTCGYSNmUiAtX0RnLxWQ3I6URMBC4d21b9j3fdwQV4PLWf_daQGZcJsHZXapUfYi_WTuOPdW7wUFHvIcFj3CGcqn9c27DbaR_aMu1GustayeYXH20skKtfDL5n0i9oabp1bV0CEJSM17Wa5cvAuPTFbAie-3pbYXRGJoVtOfK_Ln76KbOcsYo0FstERQKzJ5XlB4AGwGPdiG6wETua6B-K6Ap5P79NM0I8id4v1zOPy4yQc1Sljo4UqCK9oanNvMgQdPagpqJ30v5l-hxDep3L3jj4jfDOM9EbC7OvnSsp9W1dbrx1lV5gddCAJHT25WvVqHxMiimnbsScM8EgX7BK9ahzX6-vhjp0eGMAf8zYnjW5kxPItVxlRuoePLqUcP2y0sysVHahHSkEI_RVEJfridowDn8tdFbtYqZFpDDT5ZH36LkU8P3eX6hSwspP3KvkXNrv57ffg7dFZxlWXJ2J1ZNXgJ3ZL_MXbyVekQyVGlYIqWz1KdSgnmE9ZHDhg52dj_8IE_GEL4yUfvxiLq_-N_KaL9JUgvxiLM-_adISajIl9465kKrbm-GVnEOv8kkTZlsiwTZni2tGxjX-JT27aIRO7ONpOAWxHgOKycrItIHRROd3kkWZ1ryrz3g1mu9vEtZ_fZfeMxrtOnrnclPlhdtdxICts7Oh7LpGOnXNSS9dLFpJkAWVhh_2dUBcvCy9NsPWNJxbIaWOCujN_lwJF5eIzLQhJKBynkQNKEJvhn00l1LAWvb3UVajpx_o2bllM-F35kt6kQdrAiP8AsjOe-5UsGYxXH66GWEoTQqFOw0zU7nV9BufBaMudpDCGAt4YFu2)
 
 #### Security
-Calls to the `pubsub` can be done either on behalf of a user or a backend module if this is a result of the processing of another event. While all calls from `mod-pubsub` to subscribers will be done on behalf of the `pubsub`. For these cases we can’t use or apply permissions granted to a user, because these calls don't have user context and could be treated as “System” or “Internal”. Since FOLIO Platform currently does not provide such type of users (a System/Internal level user) it makes sense to create an ordinary user that will be assigned to the `pubsub` to perform all actions on behalf of that. Also, it means that all data required by OKAPI to be provided in the HTTP headers must be transferred as attributes in the metadata section of an event payload (X-Okapi-Tenant, etc.). The drawback of this approach is that the dedicated user can be accidentally deleted by a FOLIO administrator. Also, it is allowed to login from UI using that user’s credentials. The `mod-pubsub` module should be able to obtain a JWT token from mod-authtoken on behalf of that “technical” user as well.
+Calls to the `pubsub` can be done either on behalf of a user or a backend module if this is a result of the processing of another event. While all calls from `mod-pubsub` to subscribers will be done on behalf of the `pubsub`. For these cases we can’t use or apply permissions granted to a user, because these calls don't have user context and could be treated as “System” or “Internal”. Since FOLIO Platform currently does not provide such type of users (a System/Internal level user) it makes sense to create an ordinary user that will be assigned to the `pubsub` to perform all actions on behalf of that. Also, it means that all data required by OKAPI to be provided in the HTTP headers must be transferred as attributes in the metadata section of an event payload (X-Okapi-Tenant, etc.). The drawback of this approach is that the dedicated user can be accidentally deleted by a FOLIO administrator. Also, it is allowed to login from UI using that user’s credentials.
+
+The `mod-pubsub` module should be able to obtain a JWT token from mod-authtoken on behalf of that “technical” user as well. It could be done when the module is enabled for a tenant. Time-to-live for such a token should be quite long enough.
 
 A special set of FOLIO permissions should be defined to allow to publish and deliver events.
-
-Permission name | Description [VBar: lets discuss more]
---- | ---
-event.publish.post | This permission is required by the `pubsub` in order to publish an event. So each backend module which acts as a publisher must have this as a module level permission. 
-event.deliver.post | This permission must be granted to the `mod-pubsub` by default as a module level permission. So backend modules can protects its “Delivery endpoints” with this permission.
-event.callback.post | This permission must be granted to the `mod-pubsub` by default as a module level permission. Backend modules can protect its callback endpoints used for notifications with this permission.
 
 #### Implementation notes
 The `pubsub` implementation (`mod-pubsub`) must have its own persistent storage to store all registered event descriptors with publishers and subscribers linked to them.
