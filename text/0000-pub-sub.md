@@ -18,7 +18,7 @@ The approach described here is to provide a messaging system whereby modules pub
 
 ### Requirements
 #### Functional Requirements
-- A business module (back-end) can define a set of events it can send (publish). It can also declare the receive (subscribe to).
+- A business module (back-end) can define a set of events it can send (publish). It can also declare and receive (subscribe to) event of different types.
 
 - An “Event Descriptor” must be provided to define new event types.
   1. The event definition produces a unique “Event Type”
