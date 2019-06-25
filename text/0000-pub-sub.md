@@ -38,9 +38,6 @@ The approach described here is to provide a messaging system whereby modules pub
 
 - Integration with external/third party systems should be allowed (not in scope of MVP, but the basis for that must be provided)
 
-#### Non Functional Requirements
-- Direct access from backend modules to the underlying messaging engine (Kafka)
-
 ### Target Solution Architecture
 
 #### Solution Overview
