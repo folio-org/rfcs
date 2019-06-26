@@ -60,6 +60,7 @@ There is a global FOLIO interface `pubsub` defined in the scope of this solution
   - `DELETE /pubsub/eventtypes/declare/subscriber` - to remove subscriber declaration
 - API to retrieve existing registered event types.
   - `GET /pubsub/eventtypes` - returns all registered event types
+  - `GET /pubsub/eventtypes/{EVENT_TYPE}` - returns an event descriptor for a particular event type
 - API to retrieve the registered subscriptions for a specified tenant and event type
   - `GET /pubsub/eventtypes/{EVENT_TYPE}/subscribers` - returns all subscribers of the event type provided in the path variable
   - `GET /pubsub/eventtypes/{EVENT_TYPE}/publishers` - returns all publishers of the event type provided in the path variable
@@ -115,7 +116,7 @@ The `mod-pubsub` must keep track of registered event types, publishers and subsc
 ##### Event descriptor data structure
 Name | Type
 --- | ---
-Event type | String
+Event type | String - not UUID, should be human readable
 Description | String
 Default TTL | Period (1 minute, 1 hour, 1 day, 1 week, etc.)
 Signed event | Boolean (true/false)
@@ -125,7 +126,7 @@ Name | Type
 --- | ---
 Event ID | UUID 
 Event type | String
-Metadata | A set of named attributes <table><tr><td>Tenant ID</td><td>String</td><td>Required</td></tr><tr><td>Event TTL</td><td>Period</td><td>Required</td></tr><tr><td>CorrelationID (could be used to track related events)</td><td>UUID</td><td>Optional</td></tr><tr><td>Original event ID</td><td>UUID</td><td>Optional</td></tr></table> 
+Metadata | A set of named attributes <table><tr><td>Tenant ID</td><td>String</td><td>Required</td></tr><tr><td>Event TTL</td><td>Period</td><td>Required</td></tr><tr><td>CorrelationID (could be used to track related events)</td><td>UUID</td><td>Optional</td></tr><tr><td>Original event ID</td><td>UUID</td><td>Optional</td></tr><tr><td>Publisher callback</td><td>endpoint or event name</td><td>Optional</td></tr></table> 
 Event payload | Arbitrary JSON (String representation)
 
 #### Event publishing
