@@ -159,7 +159,7 @@ Also, it adds a dependency on the third-party platform (Kafka). But having that 
 Some HTTP calls overhead will be present because all interactions between `mod-pubsub`, publishers and subscribers will be done via the HTTP protocol through the OKAPI module. 
 
 ## Rationale and Alternatives
-It could be possible to implement `pubsub` functionality in the scope of OKAPI, but it this will unnecessarily increase the complexity of the OKAPI module, which is currently quite complex. However, such an implementation may not be sufficiently feature rich.
+It could be possible to implement `pubsub` functionality in the scope of OKAPI, but this will unnecessarily increase the complexity of the OKAPI module, which is currently quite complex. However, such an implementation may not be sufficiently feature rich.
 
 As an alternative, it is possible to use a messaging platform (Kafka, RabbitMQ) directly without a proxy module. But it will add an explicit dependency on the selected messaging engine. 
 Also, it forces to add some boilerplate code snippets to all modules which need to deal with publisher-subscriber functionality, or at least it will require to create some sort of shared library to be used by backend modules.
