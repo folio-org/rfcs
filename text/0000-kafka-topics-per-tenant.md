@@ -7,53 +7,88 @@
 
 ## Summary
 
-The purpose of this RFC is to lay out the reasoning to stop creating Kafka topics for each tenant installed into a FOLIO cluster.
+The purpose of this RFC is to lay out the reasoning to stop creating Kafka topics for each tenant installed into a FOLIO cluster. This will reduce the partition count needed for normal operations.
 
 ## Motivation
-- Increase scalability of FOLIO's event driven design when used in a Kafka installation. More partitions means more units of work by Kafka.
-- Removes the ceiling on the number of tenants FOLIO can have. This will currently be impacted by soft Kafka partitions limit.
-- Reduce monetary cost when using managed Kafka installation in the cloud. This promotes the success of the FOLIO platform by reducing hosting costs.
-- Remove false sense of tenant isolation and incomplete implementation proposed by [Temporary Kafka Security Solution](https://wiki.folio.org/x/YYVFAw)
+FOLIO is a multi-tenant system that allows hosting providers to allocate their tenants to varying cluster configurations. Some tenants should exist on their own clusters while other tenants, with low volume, can be installed into a shared cluster. Installation of a tenant in a cluster means that topics will be created exclusively for the tenant.
 
-## Detailed Explanation/Design
 FOLIO should cease creating Kafka topics for each tenant installed. This has scaling & cost implications.
 
-FOLIO is a multi-tenant system that allows hosting providers to allocate their tenants to varying cluster configurations. Some tenants should exist on their own clusters while other tenants, with low volume, can be installed into a shared cluster. Installation of a tenant in a cluster means that topics will be created exclusively for the tenant. This approach is one part of a three part proposal to imbibe FOLIO tenant isolation in Kafka:
-- Kafka topics for each tenant.
-- Dedicated Kafka users for each tenant.
-- ACLs limiting topic access to specific Kafka users.
+Similar to a database not having a theoretical limit on the number of rows/tables, Kafka does not have a limit on partition count. A major difference is that a partition is "heavier" than a row/table. Partitions have to be rebalanced, replicated with corresponding open server files for each partition. Partitions have an ongoing administrative cost while online. Creating numerous partitions like they are database rows/tables will spell disaster for an under-provisioned Kafka installation. This is why cloud providers ensure to have limits on partition counts. Provisioning a Kafka installation to support such high partition counts will be wasteful for FOLIO hosting providers. Kafka's use in FOLIO is still limited, more FOLIO modules will continue to employ event driven techniques that will cause an explosion of partitions. It is best to catch this early.
 
-More details about this proposal, [Temporary Kafka Security Solution](https://wiki.folio.org/x/YYVFAw). 
+## Out of Scope
+- Enabling tenant data security within a Kafka installation.
+- Moving forward with the [Temporary Kafka Security Solution](https://wiki.folio.org/x/YYVFAw).
+- Countering module multi-versioning i.e. more than one version of a module is installed in FOLIO with tenants able to target specific versions.
+- FOLIO modules that do not use folio-kafka-wrapper to interact with Kafka. These modules should be migrated to folio-kafka-wrapper to ease partition counts.
 
-This solution is meant to be temporary as its name implies, a stop gap to a permanent solution. Creating topics for each tenant has been implemented and lightly enforced via the [folio-kafka-wrapper](https://github.com/folio-org/folio-kafka-wrapper) library. FOLIO is not able to enforce tenant security and isolation within its boundaries: the other two parts are not defined within FOLIO code, it is up to the hosting provider to implement. 
+## Detailed Explanation/Design
+### Consuming
+In folio-kafka-wrapper, a sample of a subscription pattern is defined below
 
-Attempting to implement the other two parts would probably force a decision to have dedicated modules instances to retain distinct credentials needed to access Kafka thereby raising FOLIO's cost-to-host. Having modules per tenant is cost prohibitive, causes inefficient use of some resources and overwhelm other resources e.g. increasing database connections for each module instance. At the time of writing, FOLIO's own release infrastructure does not have modules per tenant or Kafka security configurations as described by the Temporary Kafka Security Solution. Another consequence would be the need for a process to create Kafka users when a tenant is installed in okApi. A representation of Kafka ACLs would also need to be created for FOLIO developers to modify definitions for which modules can access any particular topic. These items are not defined by the temporary solution and is left for a hosting provider to figure out.
+>folio\.Default\.\w{1,}\.DI_COMPLETED
 
-Similar to a database not having a theoretical limit on the number of rows/tables, Kafka does not have a limit on partition count. A major difference is that a partition is "heavier" than a row/table. Partitions have to be rebalanced, replicated with corresponding open server files for each partition. Partitions have an ongoing administrative cost while online. Creating numerous partitions like they are database rows/tables will spell disaster for a under-provisioned Kafka installation. This is why cloud providers ensure to have limits on partition counts. Provisioning a Kafka installation to support such high partition counts will be wasteful for FOLIO hosting providers. Kafka's use in FOLIO is still limited, more FOLIO modules will continue to employ event driven techniques that will cause an explosion of partitions. It is best to catch this early.
+where folio is the cluster name, Default is the namespace then a wildcard to capture tenant ids followed by the event type(DI_COMPLETED) that the topic is supposed to contain.
+Subscriptions are created using the interface:
+```
+public static SubscriptionDefinition createSubscriptionDefinition(String env, String nameSpace, String eventType)
+```
+Modification will be made to mark the method above as deprecated and another method created to remove the wildcard which will allow the subscription pattern to look like below
+>folio\.Default\.DI_COMPLETED
 
-### Migration
-- changes will need to be made in folio-kafka-wrapper to stop creating topics for each tenant.
+### Producing
+In folio-kafka-wrapper, a topic name is generated by this interface
+```
+public static String formatTopicName(String env, String nameSpace, String tenant, String eventType)
+```
+This will generate a sample of a subscription pattern like so:
+>folio\.Default\.tenant00001\.DI_COMPLETED
+
+Modifications will be made to mark this method as deprecated and another method is created to remove the tenant id reference. This will generate a sample of a subscription pattern like so:
+>folio\.Default\.DI_COMPLETED
+
+## Migration
+- Changes will need to be made in folio-kafka-wrapper to stop creating topics for each tenant.
 - FOLIO modules will need to reference the latest version of folio-kafka-wrapper.
 - During a flower release, there should be no usage occurring in a FOLIO cluster. Existing topics will be deleted. Care should be taken to ensure all messages in the topic is consumed before topic deletion.
 - FOLIO modules are instantiated, new topics are created.
+- Migration can happen on a topic basis i.e a set of topics are migrated at a time instead of all topics within a module. What most important is identifying the consumers and producers of a topic to make necessary updates to allow proper topic identification, production & consumption.
 
 
 ## Risks and Drawbacks
 - FOLIO's multi-versioning scheme involving tenants using different versions of modules will cause functional issues. Multiple versions of a module will be consuming from the same topic and there are no guarantees about which module version will consume a message sourced from an incompatible version.
 - Insights like "how many messages have yet to be processed for a tenant" will be harder to derive.
 - Per tenant topic settings are not possible.
-- Temporary Kafka solution will no longer be possible.
+- Temporary Kafka Security Solution will no longer be possible. This solution is meant to be temporary as its name implies, a stop gap to a permanent solution. Creating topics for each tenant has been implemented and lightly enforced via the [folio-kafka-wrapper](https://github.com/folio-org/folio-kafka-wrapper) library. FOLIO is not able to enforce tenant security and isolation within its boundaries: the other two parts are not defined within FOLIO code, it is up to the hosting provider to implement. 
+Kafka Topics per tenant is one part of a three part proposal to imbibe FOLIO tenant isolation in Kafka. More details about this proposal, [Temporary Kafka Security Solution](https://wiki.folio.org/x/YYVFAw). Only one of these items was completed.
+
 
 ## Rationale and Alternatives
-The main driver for this RFC is to reduce partition count within reasonable means. Ceasing to create Kafka topics for each tenant will get us to the lowest possible count. Further feature development on FOLIO can increase the partition count, this is expected.
+The main driver for this RFC is to reduce partition count within reasonable means. Ceasing to create Kafka topics for each tenant will get us to a more reasonable count. Further feature development on FOLIO can increase the partition count, this is expected.
+
+### Option: Finishing Temporary Kafka Security Solution
+Attempting to implement the other two parts of the [Temporary Kafka Security Solution](https://wiki.folio.org/x/YYVFAw) would probably force a decision to have dedicated modules instances to retain distinct credentials needed to access Kafka thereby raising FOLIO's cost-to-host. Having modules per tenant is cost prohibitive, causes inefficient use of some resources and overwhelm other resources e.g. increasing database connections for each module instance. At the time of writing, FOLIO's own release infrastructure does not have modules per tenant or Kafka security configurations as described by the Temporary Kafka Security Solution. Another consequence would be the need for a process to create Kafka users when a tenant is installed in okApi. A representation of Kafka ACLs would also need to be created for FOLIO developers to modify definitions for which modules can access any particular topic. These items are not defined by the temporary solution and is left for a hosting provider to figure out.
+
+### Option: Supporting Module Multi-Versioning Via Topic Versioning
 FOLIO's multi-versioning scheme is still a gap not covered by this change. An approach could be to create topics for each module version. This will allow specific messages to be delivered to specific versions without causing a partition count explosion when a new tenant is installed. Topics belonging to older modules versions can be removed safely.
 
 >Example:<p>
 if V1 of Module A exists and V1 and V2 of Module B exists. Each will have their own versioned topics; Module A:V1, Module B:V1, Module B:V2.
 
 There are edge cases with this approach that will have to be fleshed out. After these edge cases are covered, I believe a complex solution would have been built.
-Some hosting providers do not employ FOLIO's multi-versioning too often. FOLIO clusters are usually within the scope of a flower release with an upgrade event to shift to another flower release. Nonetheless, multi-versioning is available and there are no guarantees that it will not be used.
+- How will V1 of module A know all the versions of other modules that exists and which topic is applicable for tenant message?
+- How will V1 of module A know that V2 of module B has been recently installed and should use V2 topic to send a message for a specific tenant?
+- Are we saying there is a one-to-one relationship between a versioned module and a versioned topic? Is the version of the topic independent from the version of the module? modules don't "own" topics for every case. Some modules are sole producers of a topic while other topics can have multiple producers.
+- Module dependencies currently described in module descriptors inform the system of other versions that are compatible when communicating via a REST interface. Are we going to define module dependencies when communicating via events? Does that undercut the loose coupling that Kafka provides?
+
+Some hosting providers do not employ FOLIO's multi-versioning too often. FOLIO clusters are usually within the scope of a flower release with an upgrade event to shift to another flower release. Nonetheless, multi-versioning is available and there are no guarantees that it will not be used. All of work will be applied to a feature that may not be used often.
+
+### Option: Supporting Module Multi-Versioning Via Message Versioning
+Another approach to counter FOLIO's multi-versioning is to version messages produced into topics. Messages would have a special header that will denote the version of the message. Logic could be applied in a module to discard messages that are not compatible with the module. Modules have different versions would have to be in their own consumer group so that each version can receive a copy of a versioned message.
+There are edge cases with this approach to think about:
+- FOLIO modules are not tenant-aware i.e. a module does not know which tenants it can processed, OR which tenant are installed in okApi for its version. This would help in discarding messages easily - tenant id exists as a header in the Kafka message.
+- Modules need a mechanism to allow compatibility for compatible future versions of a message without a code change. For example, V1 of module A emits V1 message that is consumed by V1 of module B. V2 of module A is introduced which emits a V2 message. How will V1 of module B consume the new version (which is functionally correct to consume, imagine if an extra property is added to the message) if it is strictly coded to accept V1. Will semantic versioning be introduced?
+- It would be prudent to maintain an event type registry that will maintain event type version and their schemas. It is not a rule that there must be only one producer into a topic. For example, V1 of module A and V2 of module B can produce V1 of a message into a topic. Since modules are meant to have independent development cycles, it will be important to ensure that the next version of module A and B do not declare the same version of a message but with different schemas.
+
 
 ## Unresolved Questions
-
-- How do we ensure tenant data security?
