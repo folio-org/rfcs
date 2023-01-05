@@ -7,7 +7,7 @@
 
 ## Summary
 
-The purpose of this RFC is to lay out the reasoning for creating Kafka topics using a different scheme other than what is currently employed; creating the same topic for each tenant. The recommendation is to create single topic for each application concern. This will reduce the partition count needed for normal operations. When a topic is created, it is composed of one or many partitions. Reducing the number of topics will reduce the number of partitions.
+The purpose of this RFC is to lay out the reasoning for creating Kafka topics using a different scheme other than what is currently employed; creating the same topic for each tenant. The recommendation is to create single topic for each application concern. This will reduce the partition count needed for normal operations. This is the desired outcome why a reduction of topics is needed. When a topic is created, it is composed of one or many partitions. Reducing the number of topics will reduce the number of partitions.
 
 ## Motivation
 FOLIO should cease creating Kafka topics for each tenant installed. This has scaling & cost implications.
