@@ -7,10 +7,12 @@
 
 ## Summary
 
-The purpose of this RFC is to lay out the reasoning for creating an option to use Kafka topics created for a collection of tenants instead of separate Kafka topics for each tenant. This will reduce the number of Kafka topics and subsequently the number of partitions.
+The purpose of this RFC is to lay out the reasoning for creating an option to use Kafka topics created for a collection of tenants instead of separate Kafka topics for each tenant. With this RFC, either Kafka topics are created for a collection of tenants or Kafka topics for each tenant can be configured for each deployed module instance. Using a collection of tenants will reduce the number of Kafka topics and subsequently the number of partitions.
+
+
 
 ## Motivation
-FOLIO creates Kafka topics and partitions on a per tenant basis for each application concern. There are scaling and cost implications as the number of tenants increases in a FOLIO cluster.
+Before this RFC, FOLIO creates Kafka topics and partitions on a per tenant basis for each application concern. There are scaling and cost implications as the number of tenants increases in a FOLIO cluster.
 
 - **Performance**: 
 Similar to a database not having a theoretical limit on the number of rows/tables, Kafka does not have a limit on partition count. A major difference is that a partition is "heavier" than a row/table. Partitions have to be rebalanced, replicated & maintain corresponding open server files for each partition. Partitions have an ongoing administrative cost while online. Creating numerous partitions like they are database rows/tables will spell disaster for an under-provisioned Kafka installation. This is why cloud providers ensure to have limits on partition counts. Provisioning a Kafka installation to support such a high partition count will be wasteful for FOLIO hosting providers. <p>
@@ -23,16 +25,25 @@ On the client side, buffers are created for each partition in memory. So a produ
 - Countering module multi-versioning i.e. more than one version of a module is installed in FOLIO with tenants being able to target specific versions of a module. **Module multi-versioning is supported by OKAPI & mod-pubsub but not for modules that interact directly via Kafka. This is an existing deficiency prior to the changes documented by this RFC.** More details are included in the *Related Concerns* section of this document.
 
 ## Detailed Explanation/Design
-To promote flexibility of FOLIO implementation patterns, the switch to tenant collection topics will be configurable via environment variables. The current naming scheme for topics is like so:
+For a module instance the `KAFKA_PRODUCER_TENANT_COLLECTION` environment variable
+* is set to configure Kafka topics for a tenant collection, or
+* is unset to configure Kafka topics for each tenant.
+The naming scheme for Kafka topics is like so:
+
 >[environment].[namespace].[tenant].[eventtype]
 
-An example: `folio.Default.diku.DI_COMPLETED`. The proposal will preserve the naming structure by declaring one more "tenant" where messages for multiple tenants are received for an application concern. e.g. `folio.Default.ALL.DI_COMPLETED`.<p>
+`[tenant]` is either a tenant collection like `ALL`, or a tenant id like `diku`.
+
+An example: `folio.Default.ALL.DI_COMPLETED` or `folio.Default.diku.DI_COMPLETED`.
+
 ### Module Configuration
-This approach involves creating another set of topics similar to any other tenant. These new set of topics will accept messages from all tenants in the FOLIO cluster and will be named in a similar scheme as regular tenant topics are named. The name of this tenant collection will match [A-Z][A-Z0-9]{0,30}. <p>
+The tenant collection option involves creating another set of topics similar to any other tenant. They will accept messages from a list of tenants in the FOLIO cluster and will be named in a similar scheme as regular tenant topics are named. The name of this tenant collection must match [A-Z][A-Z0-9]{0,30}. <p>
 
 A FOLIO module will check for the existence of an environment variable called `KAFKA_PRODUCER_TENANT_COLLECTION`. With this variable unset, the module will produce messages to topics for each tenant. If the variable is set to a value like `ALL`, the module will produce messages to one topic belonging to the "ALL tenant collection" e.g. `folio.Default.ALL.DI_COMPLETED`.<p>
 
-In an ideal scenario, the value of the environment variable would be the same for all modules that need to make the switch to tenant collection topics.
+In the simplest configuration, all modules would use the `ALL` tenant collection and it contains all tenants.
+
+Advanced configurations run multiple instances of a module, enable each tenant on one of them, and use a different tenant collection like `COLLECTIONA` and `COLLECTIONB` for each module instance.
 ### Consuming
 In [folio-kafka-wrapper](https://github.com/folio-org/folio-kafka-wrapper), a sample of a subscription pattern is defined below
 
@@ -46,6 +57,7 @@ public static SubscriptionDefinition createSubscriptionDefinition(String env, St
 With the existing subscription pattern, consumers will be able to consume from single tenant topics and tenant collection topics alike. It will also allow steady migration to tenant collection topics for each module without worrying if a consuming module is listening to a tenant collection topic as well. Safeguards can be added to ensure that a message's ownership can be determined. These include:
 - Enriching messages produced by folio-kafka-wrapper with a tenant id before the message is sent.
 - Highlighting messages consumed that don't have a tenant id. Orphan messages can be logged partially or with the full contents. They can also be placed in a dead queue/topic for further review.
+- Some modules can be configured to listen to only some Kafka topics if the `KAFKA_EVENTS_CONSUMER_PATTERN` environment variable is set. This works with tenant id and tenant collection based topics.
 
 It is imperative that every message has a owner.
 
@@ -67,15 +79,17 @@ A producer must ensure the message has a tenant id as one of its headers. It is 
 ## Migration To Tenant Collection Topics
 - FOLIO modules with latest version of folio-kafka-wrapper and `KAFKA_PRODUCER_TENANT_COLLECTION` set - are instantiated, new topics are created by module business logic.
 - Existing tenant topics can be dropped.
+## Migration to New Module Version
+When multiple module versions run that are incompatible regarding Kafka messages they must be separated. One way is setting the `ENV` environment variable that populates the `[environment]` part of the Kafka topic, for example `ENV=nolana` and `ENV=orchid` for different FOLIO flower releases.
 
 
 ## Risks and Drawbacks
+- A Burst of messages from one tenant will inhibit processing of messages from other tenants that are in the same tenant collection.
 - Lack of support in Kafka interactions for FOLIO's multi-versioning scheme can cause functional issues. Rate of issue occurrence does not increase with the changes detailed in this RFC. Functional issue occurrence is dependent on the breaking changes implemented in the varying versions of a module. Multiple versions of a module will be consuming from the same topic and there are no guarantees about which module version will consume a message sourced from an incompatible version.
 - Insights like "how many messages have yet to be processed for a tenant" will be harder to derive.
 - Tenant specific topic settings will not be possible.
-- A Burst of messages from one tenant will inhibit processing of messages from other tenants compared to the current state without this RFC's changes.
 - [Temporary Kafka Security Solution](https://wiki.folio.org/x/YYVFAw) as described will no longer be possible. FOLIO is not able to enforce tenant security and isolation within its boundaries: the other two parts are not defined within FOLIO code, it is up to the hosting provider to implement. It is unlikely that this temporary solution has been fully implemented by a hosting provider because FOLIO modules are not able to accept and manage the multiple identities needed to consume/produce into topics locked by ACLs. 
-  - Before this proposal, a Kafka administrator could set ACLs to Kafka topics so that a module can listen to only those tenants the module is enabled for in Okapi. When using topics with tenant collections, the ACLs can no longer be used on a tenant basis.
+  - Before this proposal, a Kafka administrator could set ACLs to Kafka topics so that a module can listen to only those tenants the module is enabled for in Okapi. When using topics with tenant collections, the ACLs can no longer be used on a tenant basis. They can be used on a tenant collection basis, though.
 
 ## Rationale and Alternatives
 Here are other alternatives that were considered: 
@@ -88,9 +102,6 @@ This alternative is not included in this RFC because administration of a Kafka i
 
 
 ## Frequently Asked Questions
-- Should we ensure one tenant doesn't hog resources with a large number of messages which delays processing for other tenants with messages in a tenant collection topic?
-  - Within a tenant collection topic, there are still multiple partitions where messages will tend to be distributed evenly. So a tenant collection topic does not mean a strict queue with first in, first out i.e. only one partition. There will be some impact compared to the current state prior to this RFC. There are strategies that can be employed by a Kafka administrator when there is high offset lag or hot partitions in a cluster.
-
 - Should we ensure that FOLIO's multi-versioning scheme is applied in Kafka as well?
   - Multi-versioning is not supported with direct interaction with Kafka currently. This is out of scope for this RFC to resolve.
 
