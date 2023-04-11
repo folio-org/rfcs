@@ -7,7 +7,7 @@
 
 ## Summary
 
-The purpose of this RFC is to lay out the reasoning for creating an option to use Kafka topics created for a collection of tenants instead of separate Kafka topics for each tenant. With this RFC, either Kafka topics are created for a collection of tenants or Kafka topics for each tenant can be configured for each deployed module instance. Using a collection of tenants will reduce the number of Kafka topics and subsequently the number of partitions.
+With this RFC, either Kafka topics are created for a collection of tenants or Kafka topics for each tenant can be configured for each deployed module instance. Using a collection of tenants will reduce the number of Kafka topics and subsequently the number of partitions.
 
 
 
