@@ -1,7 +1,11 @@
 
-- Start Date: (fill me in with today's date, YYYY-MM-DD)
-- RFC PR: (leave this empty)
-- FOLIO Issue: (leave this empty)
+- Stage: (DRAFT REVIEW, PRELIMINARY REVIEW, PUBLIC REVIEW, FINAL REVIEW)
+- RFC PRs: 
+  - DRAFT REVIEW: TBD
+  - PRELIMINARY REVIEW: TBD
+  - PUBLIC REVIEW: TBD
+  - FINAL REVIEW: TBD
+- Outcome:  (Leave this blank.  Will eventually be either ACCEPTED or REJECTED)
 
 # (Title <provide concise title here>)
 
