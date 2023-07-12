@@ -10,35 +10,6 @@ For process overview, please see https://wiki.folio.org/display/TC/RFC+Process
 * An open final review period is provided for community feedback before acceptance.
 * RFCs are available to be implemented once they become “active”
 
-## When you need to follow this process
-
-You need to follow this process if you intend to make "substantial" changes to Folio the platform, including but not limited to: Okapi, Stripes and Folio Core Modules, and Folio Architecture. What constitutes a "substantial" change is evolving based on community norms, but may include the following.
-
-* Any changes to the Folio infrastructure including Okapi and Stripes
-* The addition or removal of conventions, patterns and protocols that are key to the interoperability of Folio components.
-* The removal of features that already part of a Folio release.
-* Any change required for integration with systems external to Folio
-* Changes that require the coordination between multiple Folio components or services.
-* A new feature which might be considered redundant to existing features.
-
-Some changes do not require an RFC:
-
-* Rephrasing, reorganizing, refactoring
-* Additions that strictly improve objective, numerical quality criteria (warning removal, speedup, better platform coverage, more parallelism, trap more errors, etc.)
-* Changes that are scoped entirely to a single component or service of Folio
-* Additions only likely to be noticed by other developers-of-Folio, invisible to users-of-Folio.
-
-If you submit a pull request to implement a new feature without going through the RFC process, it may be closed with a polite request to submit an RFC first.
-
-## Before Creating an RFC
-
-A hastily-proposed RFC can hurt its chances of acceptance. Low quality proposals, proposals for previously-rejected features, or those that don't fit into the near-term roadmap, may be quickly rejected, which can be demotivating for the unprepared contributor. Laying some groundwork ahead of the RFC can make the process smoother.
-
-Although there is no single way to prepare for submitting an RFC, it is generally a good idea to pursue feedback from other project developers beforehand, to ascertain that the RFC may be desirable; having a consistent impact on the project requires concerted effort toward consensus-building.
-
-The most common preparations for writing and submitting an RFC include talking the idea over on Folio Slack, discussing the topic on Folio Discus, if applicable presenting the proposal to the relevant SIG(s) and occasionally fully describing more complex concepts on the Folio Wiki.
-
-As a rule of thumb, receiving encouraging feedback from long-standing project developers, and members of relevant SIGs is a good indication that the RFC is worth pursuing.
 
 ## What the Process Is
 
@@ -69,13 +40,6 @@ The following states represent the lifecycle of the RFC. The states are implemen
 * **Active**: RFC has been accepted and is now ready for implementation
 * **Rejected**: RFC has been rejected and is now effectively closed.
 
-## Reviewing RFCs
-
-Each week the Technical Council will attempt to process some set of open RFC pull requests. This would include assigning reviewers, accepting, rejecting or activating RFCs. 
-Implementing an RFC
-
-The author of an RFC is not obligated to implement it. Of course, the RFC author (like any other developer) is welcome to post an implementation for review after the RFC has been accepted.
-Furthermore, the fact that a given RFC is “active” implies nothing about what priority is assigned to its implementation, nor whether anybody is currently working on it.
 
 **Folio’s RFC process owes its inspiration to the [Ember] and [Rust] RFC processes.**
 
