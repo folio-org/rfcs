@@ -1,10 +1,6 @@
 # Folio RFCs
 
-Many changes, including bug fixes and documentation improvements can be implemented and reviewed via the normal Jira-issue/GitHub-pull-request workflow.
-
-Some changes though are "substantial", and we ask that these be put through a bit of a design process and produce a consensus among the Folio Technical Council.
-
-The "RFC" (request for comments) process is intended to provide a consistent and controlled path for new features to enter the platform, and so that all stakeholders can be confident about the long-term and strategic direction for the platform.
+For process overview, please see https://wiki.folio.org/display/TC/RFC+Process
 
 ## Overview
 
