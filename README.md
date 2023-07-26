@@ -2,15 +2,6 @@
 
 For process overview, please see https://wiki.folio.org/display/TC/RFC+Process
 
-## Overview
-
-* Folio RFCs are stored as MarkDown documents as part of the GitHub RFC Repo.
-* RFCs evolve through a life-cycle from “submitted” to either “active” or “rejected”.
-* The RFC approval process is managed as a pull request and undergoes a formal review
-* An open final review period is provided for community feedback before acceptance.
-* RFCs are available to be implemented once they become “active”
-
-
 ## Getting started
 
 * Fork the RFC repo RFC repository: https://github.com/folio-org/rfcs
