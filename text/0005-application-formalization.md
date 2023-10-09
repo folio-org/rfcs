@@ -1,6 +1,11 @@
 - Start Date: 10/09/2023
-- RFC PR: 
-- FOLIO Issue: 
+- Stage: DRAFT <!-- DRAFT REVIEW, PRELIMINARY REVIEW, PUBLIC REVIEW, FINAL REVIEW -->
+- RFC PRs:
+  - DRAFT REVIEW: https://github.com/folio-org/rfcs/pull/14
+  - PRELIMINARY REVIEW: TBD
+  - PUBLIC REVIEW: TBD
+  - FINAL REVIEW: TBD
+- Outcome: <!-- Leave this blank. Will eventually be either ACCEPTED or REJECTED -->
 
 # Application Formalization
 
