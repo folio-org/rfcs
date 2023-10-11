@@ -5,10 +5,8 @@
   * Draft Review : https://github.com/folio-org/rfcs/pull/3
   * Public Review : https://github.com/folio-org/rfcs/pull/3
   * Final Review : https://github.com/folio-org/rfcs/pull/3
-* FOLIO Issue:
-* Current Status: :no_entry_sign: ACCEPTED :no_entry_sign:
-* Submitter : Radhakrishnan Gopalakrishnan (rgopalakrishnan@ebsco.com)
-* Co-Submitter(s) : Zak Burke (zburke@ebsco.com)
+* Current Status: ACCEPTED
+* Contributors : Radhakrishnan Gopalakrishnan (rgopalakrishnan@ebsco.com), Zak Burke (zburke@ebsco.com)
 * Sub Group : 
   * Marc Johnson (marc.johnson@k-int.com)
   * Julian Ladisch (julian.ladisch@gbv.de)
