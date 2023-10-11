@@ -1,5 +1,7 @@
 - Start Date: 10/09/2023
-- Stage: PRELIMINARY REVIEW <!-- PRELIMINARY REVIEW, DRAFT REVIEW, PUBLIC REVIEW, FINAL REVIEW -->
+- Contributors:
+  - [Craig McNally](cmcnally@ebsco.com)
+  - [Vince Bareau](vbareau@ebsco.com)
 - RFC PRs:
   - DRAFT REVIEW: https://github.com/folio-org/rfcs/pull/14
   - PRELIMINARY REVIEW: TBD
