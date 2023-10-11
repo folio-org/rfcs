@@ -1,12 +1,14 @@
 
 * Start Date: 2022-03-29
+* Contributors:
+  * [Radhakrishnan Gopalakrishnan](rgopalakrishnan@ebsco.com)
+  * [Zak Burke](zburke@ebsco.com)
 * RFC PR: 
   * Preliminary Review: https://github.com/folio-org/rfcs/pull/3
   * Draft Review : https://github.com/folio-org/rfcs/pull/3
   * Public Review : https://github.com/folio-org/rfcs/pull/3
   * Final Review : https://github.com/folio-org/rfcs/pull/3
 * Current Status: ACCEPTED
-* Contributors : Radhakrishnan Gopalakrishnan (rgopalakrishnan@ebsco.com), Zak Burke (zburke@ebsco.com)
 * Sub Group : 
   * Marc Johnson (marc.johnson@k-int.com)
   * Julian Ladisch (julian.ladisch@gbv.de)
