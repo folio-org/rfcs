@@ -1,6 +1,7 @@
 
 - Start Date: 2019-06-20
-- Contributors: Taras Spashchenko (taras_spashchenko@epam.com)
+- Contributors:
+  - [Taras Spashchenko](taras_spashchenko@epam.com)
 - RFC PR: https://github.com/folio-org/rfcs/pull/2
 - Outcome: ACCEPTED
 
