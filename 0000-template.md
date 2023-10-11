@@ -1,11 +1,11 @@
 
 - Contributors: (Comma-separeted list of contributors to this RFC)
 - RFC PRs: 
-  - DRAFT REVIEW: TBD
   - PRELIMINARY REVIEW: TBD
+  - DRAFT REVIEW: TBD
   - PUBLIC REVIEW: TBD
   - FINAL REVIEW: TBD
-- Outcome:  (Leave this blank.  Will eventually be either ACCEPTED or REJECTED)
+- Outcome: (Leave this blank.  Will eventually be either ACCEPTED or REJECTED)
 
 # (Title <provide concise title here>)
 
