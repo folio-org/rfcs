@@ -1,5 +1,5 @@
 
-- Stage: (DRAFT REVIEW, PRELIMINARY REVIEW, PUBLIC REVIEW, FINAL REVIEW)
+- Contributors: (Comma-separeted list of contributors to this RFC)
 - RFC PRs: 
   - DRAFT REVIEW: TBD
   - PRELIMINARY REVIEW: TBD
