@@ -1,7 +1,11 @@
 
-- Start Date: (fill me in with today's date, YYYY-MM-DD)
-- RFC PR: (leave this empty)
-- FOLIO Issue: (leave this empty)
+- Contributors: (Comma-separeted list of contributors to this RFC)
+- RFC PRs: 
+  - PRELIMINARY REVIEW: TBD
+  - DRAFT REVIEW: TBD
+  - PUBLIC REVIEW: TBD
+  - FINAL REVIEW: TBD
+- Outcome: (Leave this blank.  Will eventually be either ACCEPTED or REJECTED)
 
 # (Title <provide concise title here>)
 
