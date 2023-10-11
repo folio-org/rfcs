@@ -1,6 +1,8 @@
 
 - Start Date: 2022-08-12
-- Contributors: Olamide Kolawole (okolawole@ebsco.com), Julian Ladisch (julian.ladisch@gbv.de)
+- Contributors:
+  - [Olamide Kolawole](okolawole@ebsco.com)
+  - [Julian Ladisch](julian.ladisch@gbv.de)
 - RFC PRs: 
   - Preliminary Review: https://github.com/folio-org/rfcs/pull/4
   - Draft Review: https://github.com/folio-org/rfcs/pull/6
