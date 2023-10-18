@@ -7,7 +7,7 @@ For process overview, please see https://wiki.folio.org/display/TC/RFC+Process
 * Fork the official RFC repo at https://github.com/folio-org/rfcs . This is usually only needed once for any number of RFCs to be submitted.
 * Create a file in the text directory at the top of the forked repo. It should follow the template defined here. Ensure that the file is named appropriately, taking note of the sequence numbers of existing RFCs.
 * Fill in the RFC. Put care into the details: RFCs that do not present convincing motivation, do not demonstrate understanding of the impact of the design, or are disingenuous about the drawbacks or alternatives tend to be poorly-received.
-* In the forked repo on GitHub, create a PR comparing the branch where edited file is located to the master branch of the official RFC repo. Ensure the name of the pull request has the name of the RFC phase at the beginning. e.g. "[DRAFT REVIEW] Java 17" or "DRAFT REVIEW | Java 17"
+* In the forked repo on GitHub, create a PR comparing the branch where edited file is located to the master branch of the official RFC repo. Ensure the name of the pull request has the name of the RFC phase at the beginning. e.g. "[DRAFT REVIEW] Java 17" or "DRAFT REVIEW | Java 17" A guide for closing (not merging) and creating new PRs for each stage of the process is available on the wiki: https://wiki.folio.org/display/TC/RFC+Branching+Guide
 * As a pull request the RFC will receive design feedback from the larger community, and the author should be prepared to revise it in response.
 * The Technical Council will assign one or more reviewers to the RFC pull requests and the feedback process will begin. See the wiki for more details: https://wiki.folio.org/display/TC/RFC+Process 
   
