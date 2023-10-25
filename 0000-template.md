@@ -1,5 +1,7 @@
 
-- Contributors: (Comma-separeted list of contributors to this RFC)
+- Contributors:
+  - [FirstName LastName](EmailAddress)
+  - [FirstName LastName](EmailAddress)
 - RFC PRs: 
   - PRELIMINARY REVIEW: TBD
   - DRAFT REVIEW: TBD
