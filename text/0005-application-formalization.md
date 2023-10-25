@@ -26,6 +26,7 @@ The existing Folio project lacks a formal definition of an Application structure
 * Application Stores and Marketplaces are ***out of scope***
 * Application-specific UI bundles is ***out of scope***
 * How movement of modules between Applications will work is ***out of scope***
+* How bounded contexts and cross-module database access could be introduced is ***out of scope***
 
 ## Detailed Explanation/Design
 
@@ -161,14 +162,10 @@ Example:
 **N.B.** Full module descriptors and metadata have been omitted for readability reasons.
 
 ## Benefits
-* Allows for expanding the bounded context
-  * By expanding the bounded context from the module to the Application, multiple modules can directly access the storage of the microservice.
-  * Benefites of this include:  
-    * Improved performance and simplified logic.  Modules can now perform the same operations with fewer API calls.
-    * Fewer modules since this eliminates the need for separate business logic and storage modules.
 * This is the first step toward breaking the monolithic release into application-specific releases
 * Results in fewer things to work with at the system operator level
 * Brings us closer to realizing the idea of having an application store/marketplace
+* Allows for introducing/expanding the bounded context (subject of a separate RFC)
 
 ## Risks and Drawbacks
 * Folio has too many module dependencies which must be reduced
