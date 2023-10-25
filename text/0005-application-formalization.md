@@ -189,4 +189,4 @@ Alternative approaches include:
 The following unresolved questions are not addressed here, but will be the addressed in other RFCs:
 * How will Application management work?
 * How will Application Descriptors be developed and maintained?
-* How the Stripes UI will be updated as applications are enabled/disabled?
+* How the Stripes UI will be updated as applications are enabled/disabled/upgraded?
