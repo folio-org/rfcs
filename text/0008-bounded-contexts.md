@@ -3,7 +3,7 @@
   * [Craig McNally](cmcnally@ebsco.com)
   * [Vince Bareau](vbareau@ebsco.com)
 * RFC PRs:
-  * PRELIMINARY REVIEW: https://github.com/folio-org/rfcs/pull/17
+  * PRELIMINARY REVIEW: https://github.com/folio-org/rfcs/pull/20
   * DRAFT REFINEMENT: TBD
   * PUBLIC REVIEW: TBD
   * FINAL REVIEW: TBD
