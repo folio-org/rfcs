@@ -1,13 +1,13 @@
-- Start Date: 10/09/2023
-- Contributors:
-  - [Craig McNally](cmcnally@ebsco.com)
-  - [Vince Bareau](vbareau@ebsco.com)
-- RFC PRs:
-  - DRAFT REVIEW: https://github.com/folio-org/rfcs/pull/14
-  - PRELIMINARY REVIEW: TBD
-  - PUBLIC REVIEW: TBD
-  - FINAL REVIEW: TBD
-- Outcome: <!-- Leave this blank. Will eventually be either ACCEPTED or REJECTED -->
+* Start Date: 10/09/2023
+* Contributors:
+  * [Craig McNally](cmcnally@ebsco.com)
+  * [Vince Bareau](vbareau@ebsco.com)
+* RFC PRs:
+  * PRELIMINARY REVIEW: https://github.com/folio-org/rfcs/pull/14
+  * DRAFT REFINEMENT: TBD
+  * PUBLIC REVIEW: TBD
+  * FINAL REVIEW: TBD
+* Outcome: <!-- Leave this blank. Will eventually be either ACCEPTED or REJECTED -->
 
 # Application Formalization
 
@@ -181,6 +181,10 @@ Example:
 Alternative approaches include:
 * **Status quo** - Don't do anything and deal with monolithic releases, an ever-growing number of modules, and all the problems and challenges associated with those things.
 * **Independent module release cycles** - Impractical due to how tightly coupled modules are to one another.   It also doesn't address the issue of system operators needing to manage an ever growing number of modules.
+
+## Timing
+* First in the sequence.  
+* RFC Submission:  Early October '23
 
 ## Unresolved Questions
 The following unresolved questions are not addressed here, but will be the addressed in other RFCs:
