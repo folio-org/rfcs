@@ -12,18 +12,6 @@ For process overview, please see https://wiki.folio.org/display/TC/RFC+Process
 * The Technical Council will assign one or more reviewers to the RFC pull requests and the feedback process will begin. See the wiki for more details: https://wiki.folio.org/display/TC/RFC+Process 
   
 
-## The RFC Lifecycle
-
-The following states represent the lifecycle of the RFC. The states are implemented as “Labels” on the GitHub pull request corresponding to the RFC draft.
-
-* **Submitted**: initial state of RFC when submitted by their authors
-* **Under Review**: RFC has been assigned to one or more reviewers
-* **In Final Review**: RFC is in the final review period
-* **Accepted**: RFC has been accepted but is not yet ready for implementation.
-* **Active**: RFC has been accepted and is now ready for implementation
-* **Rejected**: RFC has been rejected and is now effectively closed.
-
-
 **Folio’s RFC process owes its inspiration to the [Ember] and [Rust] RFC processes.**
 
 [Ember]: https://github.com/emberjs/rfcs
