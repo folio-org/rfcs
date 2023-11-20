@@ -4,7 +4,7 @@
   * [Vince Bareau](vbareau@ebsco.com)
 * RFC PRs:
   * PRELIMINARY REVIEW: https://github.com/folio-org/rfcs/pull/14
-  * DRAFT REFINEMENT: TBD
+  * DRAFT REFINEMENT: https://github.com/folio-org/rfcs/pull/22
   * PUBLIC REVIEW: TBD
   * FINAL REVIEW: TBD
 * Outcome: <!-- Leave this blank. Will eventually be either ACCEPTED or REJECTED -->
