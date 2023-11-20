@@ -12,10 +12,11 @@
 # Bounded contexts
 
 ## Summary
-It is proposed that the boundary of the microservices, and thus the bounded context, be extended beyond the module. The new bounded context would be found at the Application level. Thus, any of the backend modules in the Application would be able to directly access the storage layer.
+The term bounded context often appears in discussions about decomposing a monolithic system into multiple microservices.  Instead of all services sharing a single database, the system is partitioned into several bounded contexts, each with it's own database, data models, etc.  In Folio's case, we're working the other direction.  When the project started, it was decided that each module should have their own database, and cross-module database access must be avoided.  Coupling this with another practice the project has followed, separating business logic and storage modules, we wind up with suboptimal service/storage interactions.  It is proposed that we introduce the concept of bounded contexts, which would align with Application boundaries.  Any of the backend modules in a given Application would be able to directly access the storage layer.
 
 ## Scope
-* Cross-module database access 
+* Cross-module database access
+  * Data "ownership" and read vs write access
 * Ensuring data integrity
 * Example use cases
 * Practical considerations for how this will work
