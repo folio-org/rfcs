@@ -22,6 +22,7 @@ In order to fulfill the vision of Applications, it is necessary to better align 
 * Static asset loading
 * Initial loading of the slim tenant bundle
 * Entitlement change detection and dynamic loading/unloading of application bundles
+* Impact on/adjustments to user experience (UX) 
 
 ## Timing
 * Third in the sequence.
