@@ -20,6 +20,7 @@ The term bounded context often appears in discussions about decomposing a monoli
 * Ensuring data integrity
 * Example use cases
 * Practical considerations for how this will work
+* Backward compatibility with Folio instances not adopting Applications
 * Access to any databases outside of the bounded context / Application is ***out of scope***
 
 ## Timing
