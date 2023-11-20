@@ -20,6 +20,7 @@ The introduction of formalized Applications introduces the need to manage such a
 * Application/Tenant entitlement
 * Application Stores & Marketplaces
 * How movement of modules between Applications will work
+* Module deployment
 
 ## Terminology
 * Application entitlement - refers to the set of applications enabled for a tenant.  If app-foo and app-bar are enabled for tenant diku, then it could be stated that: the diku tenant is entitled to app-foo and app-bar, or diku's application entitlements include app-foo and app-bar.  By extension, the diku tenant would be entitled to the modules which comprise both app-foo and app-bar.
