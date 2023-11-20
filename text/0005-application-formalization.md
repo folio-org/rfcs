@@ -22,6 +22,7 @@ The existing Folio project lacks a formal definition of an Application structure
 * Application versioning
 * Application dependencies
 * Application definition/descriptors
+* Backward compatibility with Folio instances not adopting Applications
 * Application management is ***out of scope***
 * Application Stores and Marketplaces are ***out of scope***
 * Application-specific UI bundles is ***out of scope***
