@@ -18,7 +18,7 @@ The introduction of formalized Applications introduces the need to manage such a
 * Application registration
 * Tenant creation and management
 * Application/Tenant entitlement
-* Application Stores & Marketplaces
+* How this is a step towards Application Stores & Marketplaces
 * How movement of modules between Applications will work
 * Module deployment
 
