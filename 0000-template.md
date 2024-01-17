@@ -1,7 +1,13 @@
 
-- Start Date: (fill me in with today's date, YYYY-MM-DD)
-- RFC PR: (leave this empty)
-- FOLIO Issue: (leave this empty)
+- Contributors:
+  - [FirstName LastName](EmailAddress)
+  - [FirstName LastName](EmailAddress)
+- RFC PRs: 
+  - PRELIMINARY REVIEW: TBD
+  - DRAFT REVIEW: TBD
+  - PUBLIC REVIEW: TBD
+  - FINAL REVIEW: TBD
+- Outcome: (Leave this blank.  Will eventually be either ACCEPTED or REJECTED)
 
 # (Title <provide concise title here>)
 
@@ -45,6 +51,12 @@ Why is this design the best in the space of possible designs? How does this desi
 What other designs have been considered and what is the rationale for not choosing them? 
 
 This section could also include prior art, that is, how other the same problem may have already been solved elsewhere.
+
+## Timing
+
+By what date / flower release does the proposal intend that new work be compliant?
+
+Does this RFC impact existing work?  If so, by what date / flower release does the proposal intend that existing work be updated to be compliant?
 
 ## Unresolved Questions
 
