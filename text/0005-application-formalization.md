@@ -56,7 +56,7 @@ An important concept introduced by the formalization of Applications, is that Ap
 * The [semantic version](https://semver.org/) system is used for applications.
 
 #### Application Dependencies
-Formalizing Applications does not change the underlying module implementations.  This means modules which depend on interfaces provided by other modules continue to have those dependencies.  However, the Application formalization rolls those interface dependencies up into Application dependencies, or dependencies on specific versions of applications. 
+Formalizing Applications does not change the underlying module implementations.  This means modules which depend on interfaces provided by other modules continue to have those dependencies, and those dependencies may span Application boundaries.  However, the Application formalization rolls those interface dependencies up into Application dependencies, or dependencies on specific versions of applications. 
 
 Example w/ many version omitted for clarity:
 **app-foo-1.0.1**
