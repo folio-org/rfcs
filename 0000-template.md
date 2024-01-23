@@ -52,6 +52,12 @@ What other designs have been considered and what is the rationale for not choosi
 
 This section could also include prior art, that is, how other the same problem may have already been solved elsewhere.
 
+## Timing
+
+By what date / flower release does the proposal intend that new work be compliant?
+
+Does this RFC impact existing work?  If so, by what date / flower release does the proposal intend that existing work be updated to be compliant?
+
 ## Unresolved Questions
 
 Optional, but suggested for first drafts. What parts of the design are still TBD?
