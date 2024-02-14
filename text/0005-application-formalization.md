@@ -23,7 +23,7 @@ The existing Folio project lacks a formal definition of an Application structure
 * Application dependencies
 * Application definition/descriptors
 * Backward compatibility with Folio instances not adopting Applications
-* Application management is ***out of scope***
+* Application management and deployment are ***out of scope***
 * Application Stores and Marketplaces are ***out of scope***
 * Application-specific UI bundles is ***out of scope***
 * How movement of modules between Applications will work is ***out of scope***
@@ -95,18 +95,20 @@ In this scenario, in order for `app-foo-1.0.1` to be enabled for a tenant, `app-
 Similar to how modules are explicitly defind through module descriptors, applications are defined through application descriptors.  The application descriptor references module descriptors
 
 **Application Descriptor Properties**
-| Property          | Type         | Description                                                                       | Notes                    |
-| ----------------- | ------------ | --------------------------------------------------------------------------------- | ------------------------ |
-| id                | String       | Identifier for the application conforming to pattern: `{name}-{semantic version}` | e.g. "app-orders-1.0.0"  |
-| name              | String       | Name of the application                                                           | e.g. "app-orders"        |
-| version           | String       | Version of the application                                                        | e.g. "1.0.0"             |
-| description       | String       | Brief description of the application                                              | e.g. "Application delivering orders functionality" |
-| dependencies      | Dependency[] | List of dependencies on other applications                                        | See "Dependency Properties" table below            |
-| modules           | ModuleId[]   | List of backend/edge modules comprising the application                           | See "ModuleId Properties" table below              |
-| uiModules         | ModuleId[]   | List of UI modules comprising the application                                     | See "ModuleId Properties" table below              |
-| moduleDescriptors   | ModuleDescriptor[] | Module descriptors for the backend/edge modules comprising the application| Read-only. See [ModuleDescriptor Schema](https://github.com/folio-org/okapi/blob/master/okapi-core/src/main/raml/ModuleDescriptor.json) |
+| Property            | Type         | Description                                                                          | Notes                    |
+| ------------------- | ------------ | ------------------------------------------------------------------------------------ | ------------------------ |
+| id                  | String       | Identifier for the application conforming to pattern: `{name}-{semantic version}`    | e.g. "app-orders-1.0.0"  |
+| name                | String       | Name of the application                                                              | e.g. "app-orders"        |
+| version             | String       | Version of the application                                                           | e.g. "1.0.0"             |
+| description         | String       | Brief description of the application                                                 | e.g. "Application delivering orders functionality" |
+| dependencies        | Dependency[] | List of dependencies on other applications                                           | See "Dependency Properties" table below            |
+| modules             | ModuleId[]   | List of backend/edge modules comprising the application                              | See "ModuleId Properties" table below              |
+| uiModules           | ModuleId[]   | List of UI modules comprising the application                                        | See "ModuleId Properties" table below              |
+| moduleDescriptors   | ModuleDescriptor[] | Module descriptors for the backend/edge modules comprising the application     | Read-only. See [ModuleDescriptor Schema](https://github.com/folio-org/okapi/blob/master/okapi-core/src/main/raml/ModuleDescriptor.json) |
 | uiModuleDescriptors | ModuleDescriptor[] | Module descriptors for the frontend modules/plugins comprising the application | Read-only. See [ModuleDescriptor Schema](https://github.com/folio-org/okapi/blob/master/okapi-core/src/main/raml/ModuleDescriptor.json) |
-| metadata          | Metadata     | System-generated record metadata                                         | Read-only. See [Metadata Schema] (https://github.com/folio-org/raml/blob/master/schemas/metadata.schema) |
+| metadata            | Metadata     | System-generated record metadata                                                     | Read-only. See [Metadata Schema] (https://github.com/folio-org/raml/blob/master/schemas/metadata.schema) |
+
+**NOTE**: Module descriptors are not being retired or replaced.  As such, there's no need to duplicate all of the information in the module descriptor in the application descriptor.  Things like the launchDescriptors sections of module descriptors are not duplicated or moved to the application descriptor.
 
 **Dependency Properties**
 | Property | Type    | Description                                                          | Notes                            |
