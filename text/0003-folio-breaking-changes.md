@@ -1,4 +1,3 @@
-- Start Date: 2022-10-21
 - Contributors:
   - [Jeremy Huff](huff@library.tamu.edu)
   - [Marc Johnson](marc.johnson@k-int.com)
