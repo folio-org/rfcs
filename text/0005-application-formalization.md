@@ -5,7 +5,7 @@
 * RFC PRs:
   * PRELIMINARY REVIEW: https://github.com/folio-org/rfcs/pull/14
   * DRAFT REFINEMENT: https://github.com/folio-org/rfcs/pull/22
-  * PUBLIC REVIEW: TBD
+  * PUBLIC REVIEW: https://github.com/folio-org/rfcs/pull/29
   * FINAL REVIEW: TBD
 * Outcome: <!-- Leave this blank. Will eventually be either ACCEPTED or REJECTED -->
 
