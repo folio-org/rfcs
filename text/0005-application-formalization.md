@@ -6,7 +6,7 @@
   * PRELIMINARY REVIEW: https://github.com/folio-org/rfcs/pull/14
   * DRAFT REFINEMENT: https://github.com/folio-org/rfcs/pull/22
   * PUBLIC REVIEW: https://github.com/folio-org/rfcs/pull/29
-  * FINAL REVIEW: TBD
+  * FINAL REVIEW: https://github.com/folio-org/rfcs/pull/34
 * Outcome: <!-- Leave this blank. Will eventually be either ACCEPTED or REJECTED -->
 
 # Application Formalization
