@@ -169,7 +169,7 @@ Example:
   * NOTE: How Application releases are packaged into a Folio release is the subject of a future RFC about Platforms.
 * The system operator can focus on an Application (which is a "package") rather than the multitude of individual modules it contains. They'd work with the single Application instead of the individual parts of that Application (business logic module, storage module, UI module, plugins, etc.)
 * Brings us closer to realizing the idea of having an application store/marketplace
-* Allows for introducing/expanding the bounded context (subject of a separate RFC)
+* Application formalization facilitates the adoption of a formalized microservice bounded context (subject of a separate RFC: https://github.com/folio-org/rfcs/pull/20)
 
 ## Risks and Drawbacks
 * Folio has too many module dependencies which must be reduced
