@@ -165,7 +165,8 @@ Example:
 **N.B.** Full module descriptors and metadata have been omitted for readability reasons.
 
 ## Benefits
-* This is the first step toward breaking the monolithic release into application-specific releases
+* Application formalization is the necessary first step in being able to create Application-level releases.
+  * NOTE: How Application releases are packaged into a Folio release is the subject of a future RFC about Platforms.
 * Results in fewer things to work with at the system operator level
 * Brings us closer to realizing the idea of having an application store/marketplace
 * Allows for introducing/expanding the bounded context (subject of a separate RFC)
