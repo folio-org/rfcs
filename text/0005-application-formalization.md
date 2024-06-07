@@ -183,6 +183,7 @@ Example:
 ## Rationale and Alternatives
 Alternative approaches include:
 * **Status quo** - Don't do anything and deal with monolithic releases, an ever-growing number of modules, and all the problems and challenges associated with those things.
+* Releasing of coarser granularity packages of modules; e.g. platform-core, platform-minimal, platform-complete, etc.
 * **Independent module release cycles** - Impractical due to how tightly coupled modules are to one another.   It also doesn't address the issue of system operators needing to manage an ever growing number of modules.
 
 ## Timing
