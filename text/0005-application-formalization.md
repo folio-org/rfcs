@@ -172,7 +172,7 @@ Example:
 * Application formalization facilitates the adoption of a formalized microservice bounded context (subject of a separate RFC: https://github.com/folio-org/rfcs/pull/20)
 
 ## Risks and Drawbacks
-* Transition to Applications will need to be iterative
+* Transition to Applications should be iterative
   * First pass is to create larger applications spanning multiple areas in order to satisfy dependencies
   * Subsequent passes will further break up these large applications into smaller, applications focused on a single area of functionality
 * Since Applications are a vertical slice of functionality, better alignment/coordination between back-end and front-end development teams is required.
