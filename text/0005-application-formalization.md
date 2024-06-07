@@ -167,7 +167,7 @@ Example:
 ## Benefits
 * Application formalization is the necessary first step in being able to create Application-level releases.
   * NOTE: How Application releases are packaged into a Folio release is the subject of a future RFC about Platforms.
-* Results in fewer things to work with at the system operator level
+* The system operator can focus on an Application (which is a "package") rather than the multitude of individual modules it contains. They'd work with the single Application instead of the individual parts of that Application (business logic module, storage module, UI module, plugins, etc.)
 * Brings us closer to realizing the idea of having an application store/marketplace
 * Allows for introducing/expanding the bounded context (subject of a separate RFC)
 
