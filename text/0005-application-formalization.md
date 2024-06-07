@@ -172,7 +172,6 @@ Example:
 * Application formalization facilitates the adoption of a formalized microservice bounded context (subject of a separate RFC: https://github.com/folio-org/rfcs/pull/20)
 
 ## Risks and Drawbacks
-* Folio has too many module dependencies which must be reduced
 * Transition to Applications will need to be iterative
   * First pass is to create larger applications spanning multiple areas in order to satisfy dependencies
   * Subsequent passes will further break up these large applications into smaller, applications focused on a single area of functionality
