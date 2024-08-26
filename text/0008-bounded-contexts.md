@@ -7,7 +7,7 @@
   * DRAFT REFINEMENT: TBD
   * PUBLIC REVIEW: TBD
   * FINAL REVIEW: TBD
-* Outcome: 
+* Outcome: Cancelled - The Technical Council has decided that the best path forward is to close these smaller, focused RFCs in favor of a single, wider-scoped RFC.
 
 # Bounded contexts
 
