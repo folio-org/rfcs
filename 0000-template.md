@@ -4,7 +4,6 @@
   - [FirstName LastName](EmailAddress)
 - RFC PRs: 
   - PRELIMINARY REVIEW: TBD
-  - DRAFT REVIEW: TBD
   - PUBLIC REVIEW: TBD
   - FINAL REVIEW: TBD
 - Outcome: (Leave this blank.  Will eventually be either ACCEPTED or REJECTED)
