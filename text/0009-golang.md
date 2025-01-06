@@ -7,7 +7,7 @@
   - DRAFT REVIEW: https://github.com/folio-org/rfcs/pull/27
   - PUBLIC REVIEW: https://github.com/folio-org/rfcs/pull/30
   - FINAL REVIEW: https://github.com/folio-org/rfcs/pull/33
-- Outcome: (Leave this blank.  Will eventually be either ACCEPTED or REJECTED)
+- Outcome: ACCEPTED
 
 # Add GO programming language to FOLIO Officially Supported Technologies
 
